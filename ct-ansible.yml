@@ -1,0 +1,27 @@
+- hosts: all
+  tasks:
+    - name: Install Docker Python Ubuntu
+      apt:
+        pkg:
+          - python3
+          - python3-docker
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Docker Python Centos
+      yum:
+        name:
+          - epel-release
+          - python3
+          - python3-docker
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Jalanin Container
+      docker_container:
+        name: docker-ansible
+        image: samsoel91/web-sam
+        published_ports:
+          - 10000:80
+        recreate: yes
+        state: started
+        pull: yes
